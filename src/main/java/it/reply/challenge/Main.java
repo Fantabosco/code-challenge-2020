@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.reply.challenge.model.Developer;
+import it.reply.challenge.model.Dipendente;
 import it.reply.challenge.model.Manager;
 import it.reply.challenge.utils.FileUtils;
 
@@ -50,6 +51,7 @@ public class Main {
 		for(int d = h + 2; d < devNum + h + 2; d++) {
 			String[] line = file.get(d).split(" ");
 			Developer e = new Developer();
+			e.order = d - (h + 2);
 			e.company = line[0];
 			e.bonus = Integer.valueOf(line[1]);
 			int skillNum = Integer.valueOf(line[2]);
@@ -65,23 +67,55 @@ public class Main {
 		for(int m = h + devNum + 3; m < manNum + h + devNum + 3; m++) {
 			String[] line = file.get(m).split(" ");
 			Manager e = new Manager();
+			e.order = m - (h + devNum + 3);
 			e.company = line[0];
 			e.bonus = Integer.valueOf(line[1]);
 			mans.add(e);
 		}
 		
-		//TODO
-		
 		// Solver
-		//TODO
+		Dipendente[][] soluzione = new Dipendente[h][w];
+		int score = solver(devs, mans, map, soluzione);
 		
 		// Validator
 		//TODO
 		
 		// Serializer
-		//TODO
+		for(int i = 0; i<h; i++) {			
+			for(int j = 0; j<w; j++) {
+				Dipendente d = soluzione[i][j];
+				if(d != null) {
+					d.flagPosizionato = true;
+					d.x = j;
+					d.y = i;
+				}
+			}
+		}
+		StringBuilder sb = new StringBuilder();
+		for(Developer a : devs) {
+			if(a.flagPosizionato) {
+				sb.append(a.x + " " + a.y);
+			} else {
+				sb.append("X");
+			}
+			sb.append("\n");
+		}
+		for(Manager a : mans) {
+			if(a.flagPosizionato) {
+				sb.append(a.x + " " + a.y);
+			} else {
+				sb.append("X");
+			}
+			sb.append("\n");
+		}
 		
 		// Writer
-		FileUtils.writeFile(dataset, null, 0);
+		FileUtils.writeFile(dataset, sb.toString(), score);
+	}
+
+	private static int solver(List<Developer> devs, List<Manager> mans, CellEnum[][] map, Dipendente[][] soluzione) {
+		int score = 0;
+
+		return score;
 	}
 }
